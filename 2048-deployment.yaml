@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: 2048-deployment
+   labels:
+      app: 2048-ws
+spec:
+   replicas: 2
+   selector:
+      matchLabels:
+         app: 2048-ws
+   template:
+      metadata:
+         labels:
+            app: 2048-ws
+      spec:
+         containers:
+         - name: 2048-container
+           image: public.ecr.aws/l6m2t8p7/docker-2048:latest
+           ports:
+             - containerPort: 80
+           resources:
+             limits:
+               memory: "128Mi"
+               cpu: "250m"
+             requests:
+               memory: "64Mi"
+               cpu: "100m"
+           securityContext:
+             allowPrivilegeEscalation: false
+             capabilities:
+               drop:
+                 - ALL
+               add:
+                 - CHOWN
+                 - SETUID
+                 - SETGID
+                 - NET_BIND_SERVICE
+                 - DAC_OVERRIDE
